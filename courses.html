@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Courses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <style>
+    .profile-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 0.5rem;
+      z-index: 50;
+    }
+    .profile-menu.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <!-- Auth Check -->
+  <script>
+    // Initialize Firebase with your config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv4089hst795UFeOMcE9_Sgx973idkUbg",
+      authDomain: "newsletter-fafa4.firebaseapp.com",
+      projectId: "newsletter-fafa4",
+      storageBucket: "newsletter-fafa4.appspot.com",
+      messagingSenderId: "362126767373",
+      appId: "1:362126767373:web:69b9078bb3195746f9ac44",
+      measurementId: "G-16MYH2JV03"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Check if user is logged in
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('signup.html')) {
+        // If user is not logged in and not on login/signup page, redirect to login
+        window.location.href = 'login.html';
+      }
+      updateProfileUI(user);
+    });
+
+    // Function to update profile UI
+    function updateProfileUI(user) {
+      const profileInitial = document.getElementById('profileInitial');
+      const userInfo = document.getElementById('userInfo');
+      const loginPrompt = document.getElementById('loginPrompt');
+      const userName = document.getElementById('userName');
+      const userEmail = document.getElementById('userEmail');
+
+      if (user) {
+        // User is signed in
+        profileInitial.textContent = user.displayName ? user.displayName[0].toUpperCase() : user.email[0].toUpperCase();
+        userName.textContent = user.displayName || 'User';
+        userEmail.textContent = user.email;
+        userInfo.classList.remove('hidden');
+        loginPrompt.classList.add('hidden');
+      } else {
+        // No user is signed in
+        profileInitial.textContent = '?';
+        userInfo.classList.add('hidden');
+        loginPrompt.classList.remove('hidden');
+      }
+    }
+
+    // Logout function
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        // Sign-out successful
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        // An error happened
+        console.error('Error signing out:', error);
+      });
+    }
+
+    // Profile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const profileButton = document.getElementById('profileButton');
+      const profileMenu = document.querySelector('.profile-menu');
+      
+      // Toggle menu when profile button is clicked
+      profileButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        profileMenu.classList.toggle('active');
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!profileMenu.contains(e.target) && !profileButton.contains(e.target)) {
+          profileMenu.classList.remove('active');
+        }
+      });
+      
+      // Prevent menu from closing when clicking inside it
+      profileMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    });
+  </script>
+
+  <!-- Header Section -->
+  <header class="bg-gray-800 py-8">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <a href="/" class="text-3xl font-bold text-yellow-400">Vidya Vault</a>
+      <nav>
+        <ul class="flex space-x-8 items-center">
+          <li><a href="./index.html" class="text-yellow-400 hover:text-yellow-500">Home</a></li>
+          <li><a href="#about" class="text-yellow-400 hover:text-yellow-500">About</a></li>
+          <li><a href="courses.html" class="text-yellow-400 hover:text-yellow-500">Courses</a></li>
+          <li><a href="newsletter.html" class="text-yellow-400 hover:text-yellow-500">Newsletter</a></li>
+          <li><a href="connect.html" class="text-yellow-400 hover:text-yellow-500">Connect</a></li>
+          
+          <!-- Profile Section -->
+          <li class="profile-container relative">
+            <div id="profileButton" class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center cursor-pointer">
+              <span id="profileInitial" class="text-gray-900 font-bold text-lg">?</span>
+            </div>
+            <!-- Profile Menu -->
+            <div class="profile-menu bg-gray-800 rounded-lg shadow-lg py-4 px-6 min-w-[200px] border border-gray-700">
+              <div id="userInfo" class="hidden">
+                <p id="userName" class="text-yellow-400 font-semibold mb-1"></p>
+                <p id="userEmail" class="text-gray-400 text-sm mb-4"></p>
+                <button onclick="logout()" class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300">
+                  Logout
+                </button>
+              </div>
+              <div id="loginPrompt">
+                <p class="text-gray-400 mb-4">Please log in to access your profile</p>
+                <a href="login.html" class="block w-full bg-yellow-400 text-center text-gray-900 px-4 py-2 rounded hover:bg-yellow-500 transition duration-300">
+                  Login
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+
+  <section id="courses" class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-yellow-400 mb-8">Our Courses</h2>
+    <p class="text-lg text-gray-300 mb-12">Explore the wide range of courses we offer to help you grow your skills and advance in your career.</p>
+  
+   <!-- 📚 Basics -->
+<div class="max-w-6xl mx-auto mb-16">
+    <h3 class="text-3xl font-semibold text-yellow-300 mb-6 text-left">📚 Basics (Class 9–12)</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Class 9 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h4 class="text-2xl text-yellow-400 mb-4">Class 9</h4>
+        <p class="text-gray-300 mb-4">Understand foundational concepts in computer science, logic, and tools for Class 9 students.</p>
+        <a href="class9.html" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Class 9</a>
+      </div>
+  
+      <!-- Class 10 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h4 class="text-2xl text-yellow-400 mb-4">Class 10</h4>
+        <p class="text-gray-300 mb-4">Grasp computer basics, introduction to coding, and tools like Scratch and Python basics.</p>
+        <a href="#class10" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Class 10</a>
+      </div>
+  
+      <!-- Class 11 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h4 class="text-2xl text-yellow-400 mb-4">Class 11</h4>
+        <p class="text-gray-300 mb-4">Learn programming fundamentals, Python, and theoretical computer science for Class 11.</p>
+        <a href="#class11" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Class 11</a>
+      </div>
+  
+      <!-- Class 12 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h4 class="text-2xl text-yellow-400 mb-4">Class 12</h4>
+        <p class="text-gray-300 mb-4">Advance your Python, database concepts, and get ready for board exams and beyond.</p>
+        <a href="#class12" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Class 12</a>
+      </div>
+    </div>
+  </div>
+  
+  
+    <!-- 🎯 Placement Preparation -->
+    <div class="max-w-6xl mx-auto mb-16">
+      <h3 class="text-3xl font-semibold text-yellow-300 mb-6 text-left">🎯 Placement Preparation</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Aptitude & Logical Reasoning</h4>
+          <p class="text-gray-300 mb-4">Practice quantitative aptitude, reasoning, and problem-solving skills — ideal for placements and competitive exams.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Practice Now</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Core CS Subjects</h4>
+          <p class="text-gray-300 mb-4">Operating Systems, DBMS, CN, and more — explained clearly for tech interviews and semester prep.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Explore Topics</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Data Structures & Algorithms</h4>
+          <p class="text-gray-300 mb-4">Master DSA with coding problems, visual explanations, and interview prep series.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Solving</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 💻 Programming & Development -->
+    <div class="max-w-6xl mx-auto mb-16">
+      <h3 class="text-3xl font-semibold text-yellow-300 mb-6 text-left">💻 Programming & Development</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Programming Languages</h4>
+          <p class="text-gray-300 mb-4">Learn C, C++, Java, Python, JavaScript — from beginner to advanced levels.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Languages</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Full Stack Web Development</h4>
+          <p class="text-gray-300 mb-4">Become a full stack developer with HTML, CSS, JS, React, Node.js, and MongoDB.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Start Building</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">UI/UX Design</h4>
+          <p class="text-gray-300 mb-4">Learn UI/UX principles, wireframing, Figma, and design systems for web and mobile.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Design with Us</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 🌐 Emerging Tech -->
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-semibold text-yellow-300 mb-6 text-left">🌐 Emerging Tech</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Data Science & Machine Learning</h4>
+          <p class="text-gray-300 mb-4">Learn data analysis, ML algorithms, and AI through real-world projects and Python.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Explore ML</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">Cloud Computing</h4>
+          <p class="text-gray-300 mb-4">Work with AWS, GCP, Azure — deploy cloud apps and understand architecture.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Get Cloud Ready</a>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+          <h4 class="text-2xl text-yellow-400 mb-4">DevOps & Automation</h4>
+          <p class="text-gray-300 mb-4">Master CI/CD, Docker, Kubernetes, and automate infrastructure using Ansible.</p>
+          <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">Become DevOps Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- Courses Section -->
+  <section id="courses" class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-yellow-400 mb-8">Our Courses</h2>
+    <p class="text-lg text-gray-300 mb-12">Explore the wide range of courses we offer to help you grow your skills and advance in your career.</p>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Course 1 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">Full Stack Development</h3>
+        <p class="text-gray-300 mb-4">Learn the full stack of web development, including front-end and back-end technologies like HTML, CSS, JavaScript, Node.js, and more.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+
+      <!-- Course 2 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">Data Science and Machine Learning</h3>
+        <p class="text-gray-300 mb-4">Master the concepts of data analysis, machine learning, and artificial intelligence with real-world projects and practical examples.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+
+      <!-- Course 3 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">UI/UX Design</h3>
+        <p class="text-gray-300 mb-4">Learn how to design beautiful, user-friendly websites and mobile apps, focusing on UI and UX principles, tools, and design thinking.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+
+      <!-- Course 4 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">Cloud Computing</h3>
+        <p class="text-gray-300 mb-4">Get hands-on experience with cloud platforms like AWS, Google Cloud, and Azure, and learn how to deploy and manage scalable cloud applications.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+
+      <!-- Course 5 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">DevOps and Automation</h3>
+        <p class="text-gray-300 mb-4">Learn the essential DevOps tools and practices, including CI/CD pipelines, containerization with Docker, and infrastructure automation with Ansible and Terraform.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+
+      <!-- Course 6 -->
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+        <h3 class="text-2xl text-yellow-400 mb-4">Cybersecurity</h3>
+        <p class="text-gray-300 mb-4">Understand the fundamentals of cybersecurity, ethical hacking, network security, and how to protect data and systems from cyber threats.</p>
+        <a href="#enroll" class="bg-yellow-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-500 transition duration-300">View Course</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="bg-gray-800 py-12">
+    <div class="max-w-6xl mx-auto text-center">
+      <p class="text-gray-400 mb-4">© 2025 MyEduApp. All rights reserved.</p>
+      <div class="flex justify-center space-x-8">
+        <a href="#" class="text-yellow-400 hover:text-yellow-500">Privacy Policy</a>
+        <a href="#" class="text-yellow-400 hover:text-yellow-500">Terms of Service</a>
+        <a href="#" class="text-yellow-400 hover:text-yellow-500">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
